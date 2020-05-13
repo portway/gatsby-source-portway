@@ -1,4 +1,4 @@
-const fetch = require("node-fetch")
+const fetch = require('node-fetch')
 
 /**
  * You can uncomment the following line to verify that
@@ -29,17 +29,25 @@ const fetchFromPortway = async (url, token) => {
 
 const fetchProject = async (projectId, token) => {
   const { data } = await fetchFromPortway(
+    `https://api.portway.app/api/v1/projects/${projectId}`,
+    token
+  )
+  return data
+}
+
+const fetchProjectDocuments = async (projectId, token) => {
+  const { data } = await fetchFromPortway(
     `https://api.portway.app/api/v1/projects/${projectId}/documents`,
     token
   )
   return data
 }
 
-const fetchDocument = async (documentId, token) => {
+const fetchDocumentFields = async (documentId, token) => {
   const { data } = await fetchFromPortway(
-    `https://api.portway.app/api/v1/documents/${documentId}`,
+    `https://api.portway.app/api/v1/documents/${documentId}/fields`,
     token
-  );
+  )
   return data
 }
 
@@ -54,35 +62,70 @@ exports.sourceNodes = async ({
 
   const project = await fetchProject(projectId, token)
   // create project node
-  console.log(project)
-  
+  const nodeId = createNodeId(`portway-project-${project.id}`)
+
+  const nodeData = {
+    ...project,
+    uid: project.id,
+    // Required fields
+    id: nodeId,
+    parent: null,
+    children: [],
+    internal: {
+      type: PROJECT_NODE_TYPE,
+      mediaType: 'application/json',
+      contentDigest: createContentDigest(JSON.stringify(project))
+    },
+  }
+  createNode(nodeData)
+
+
+  const projectDocuments = await fetchProjectDocuments(projectId, token)
   // loop through documents and create Gatsby nodes
   await Promise.all(
-    project.documents.map(async (document) => {
-      const populatedDocument = await fetchDocument(document.id, token)
-      const nodeId = createNodeId(`portway-document-${document.id}`);
-      const nodeData = {
-        uid: populatedDocument.id,
-        name: populatedDocument.name,
-        content: populatedDocument.fields,
-        lastPublishedAt: populatedDocument.lastPublishedAt,
-        updatedAt: populatedDocument.updatedAt,
-        createdAt: populatedDocument.createdAt,
+    projectDocuments.map(async (document) => {
+      const documentNodeId = createNodeId(`portway-document-${document.id}`)
 
+      const documentFields = await fetchDocumentFields(document.id, token)
+
+      // create field nodes
+      const documentFieldNodeIds = documentFields.map((field) => {
+        const fieldNodeId = createNodeId(`portway-field-${field.id}`)
+        const fieldNodeData = {
+          ...field,
+          uid: field.id,
+          // Required fields
+          id: fieldNodeId,
+          parent: documentNodeId,
+          children: [],
+          internal: {
+            type: FIELD_NODE_TYPE,
+            mediaType: 'application/json',
+            contentDigest: createContentDigest(JSON.stringify(field))
+          }
+        }
+        createNode(fieldNodeData)
+        return fieldNodeId
+      })
+
+      // create parent document node with field references
+      const documentNodeData = {
+        ...document,
+        uid: document.id,
         // Required fields
-        id: nodeId,
+        id: documentNodeId,
         parent: null,
-        children: [],
+        children: documentFieldNodeIds,
         internal: {
           type: DOCUMENT_NODE_TYPE,
-          mediaType: "application/json",
-          contentDigest: createContentDigest(populatedDocument.fields),
+          mediaType: 'application/json',
+          contentDigest: createContentDigest(JSON.stringify(document)),
         },
-      };
-      createNode(nodeData)
+      }
+      createNode(documentNodeData)
     })
-  );
+  )
 
   return
 }
-exports.onPreInit = () => console.log("Loaded gatsby-portway-plugin")
+exports.onPreInit = () => console.log('Loaded gatsby-source-portway')
