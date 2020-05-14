@@ -8,9 +8,9 @@ const fetch = require('node-fetch')
  */
 
 // constants for your GraphQL Project, Document, and Field types
-const PROJECT_NODE_TYPE = `Project`
-const DOCUMENT_NODE_TYPE = `Document`
-const FIELD_NODE_TYPE = `Field`
+const PROJECT_NODE_TYPE = `PortwayProject`
+const DOCUMENT_NODE_TYPE = `PortwayDocument`
+const FIELD_NODE_TYPE = `PortwayField`
 
 const fetchFromPortway = async (url, token) => {
   const response = await fetch(url, {
