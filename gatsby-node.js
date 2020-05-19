@@ -28,27 +28,54 @@ const fetchFromPortway = async (url, token) => {
 }
 
 const fetchProject = async (projectId, token) => {
-  const { data } = await fetchFromPortway(
-    `https://api.portway.app/api/v1/projects/${projectId}`,
-    token
-  )
-  return data
+  let project
+
+  try {
+    const { data } = await fetchFromPortway(
+      `https://api.portway.app/api/v1/projects/${projectId}`,
+      token
+    )
+    project = data
+  } catch(err) {
+    throw new Error(`Unable to fetch project with id ${projectId}. 
+    Make sure you have the correct project id and that you have access to this project with the token provided.
+    Go here to see your Portway project: https://portway.app/d/project/${projectId}
+    `)
+  }
+
+  return project
 }
 
 const fetchProjectDocuments = async (projectId, token) => {
-  const { data } = await fetchFromPortway(
-    `https://api.portway.app/api/v1/projects/${projectId}/documents`,
-    token
-  )
-  return data
+  let documents
+
+  try {
+    const { data } = await fetchFromPortway(
+      `https://api.portway.app/api/v1/projects/${projectId}/documents`,
+      token
+    )
+    documents = data
+  } catch (err) {
+    throw new Error(`Unable to fetch documents for project with id ${projectId}`)
+  }
+
+  return documents
 }
 
 const fetchDocumentFields = async (documentId, token) => {
-  const { data } = await fetchFromPortway(
-    `https://api.portway.app/api/v1/documents/${documentId}/fields`,
-    token
-  )
-  return data
+  let fields
+
+  try {
+    const { data } = await fetchFromPortway(
+      `https://api.portway.app/api/v1/documents/${documentId}/fields`,
+      token
+    )
+    fields = data
+  } catch(err) {
+    throw new Error(`Unable to fetch fields for document with id ${documentId}`)
+  }
+
+  return fields
 }
 
 exports.sourceNodes = async ({
