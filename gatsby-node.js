@@ -74,11 +74,8 @@ const fetchDocumentFields = async (documentId, token) => {
   } catch(err) {
     throw new Error(`Unable to fetch fields for document with id ${documentId}`)
   }
-  
-  if (!fields.length) {
-    console.info(`Couldn't find any fields for document ${documentId}, has this document been published?`)
-  }
-  return data
+
+  return fields
 }
 
 exports.sourceNodes = async ({
