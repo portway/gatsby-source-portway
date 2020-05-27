@@ -2,7 +2,7 @@ Setting up the plugin
 
 In your gatsby project directory:
 
-`npm install gatsby-source-portway`
+`npm install --save gatsby-source-portway`
 
 Then in your project’s gatsby-config.js file add the plugin to the registry, we recommend passing in the necessary Portway token and project id as environment variables, you’ll never want to check your tokens into source control.
 
