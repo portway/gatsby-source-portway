@@ -1,5 +1,5 @@
 {
-  "name": "gatsby-source-portway",
+  "name": "@portway/gatsby-source-portway",
   "version": "1.0.0",
   "description": "A portway data fetching plugin for gatsby",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "gatsby",
     "gatsby-plugin"
   ],
-  "author": "J.J. Idt <johnidt@gmail.com>",
+  "author": "J.J. Idt <jj@bonkeybong.com>",
   "license": "MIT",
   "dependencies": {
     "node-fetch": "^2.6.0"
