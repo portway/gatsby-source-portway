@@ -8,13 +8,13 @@ Then in your project’s gatsby-config.js file add the plugin to the registry, w
 
 ```js
 plugins: [
-	{
-    resolve: 'gatsby-source-portway',
+  {
+    resolve: '@portway/gatsby-source-portway',
     options: {
       token: process.env.PORTWAY_TOKEN,
       projectId: process.env.PORTWAY_PROJECT_ID
     }
-	}
+  }
 ]
 ```
 
