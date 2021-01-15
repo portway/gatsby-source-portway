@@ -100,7 +100,7 @@ exports.sourceNodes = async ({
     children: [],
     internal: {
       type: PROJECT_NODE_TYPE,
-      mediaType: 'application/json',
+      mediaType: 'text/plain', // for conflicts with gatsby-transformer-json
       contentDigest: createContentDigest(JSON.stringify(project))
     },
   }
@@ -127,7 +127,7 @@ exports.sourceNodes = async ({
           children: [],
           internal: {
             type: FIELD_NODE_TYPE,
-            mediaType: 'application/json',
+            mediaType: 'text/plain',
             contentDigest: createContentDigest(JSON.stringify(field))
           }
         }
@@ -145,7 +145,7 @@ exports.sourceNodes = async ({
         children: documentFieldNodeIds,
         internal: {
           type: DOCUMENT_NODE_TYPE,
-          mediaType: 'application/json',
+          mediaType: 'text/plain',
           contentDigest: createContentDigest(JSON.stringify(document)),
         },
       }
