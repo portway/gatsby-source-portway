@@ -14,6 +14,7 @@
   "author": "J.J. Idt <jj@bonkeybong.com>",
   "license": "MIT",
   "dependencies": {
+    "gatsby-source-filesystem": "^2.10.0",
     "node-fetch": "^2.6.1"
   }
 }

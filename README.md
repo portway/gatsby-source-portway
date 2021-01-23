@@ -6,8 +6,12 @@ In your gatsby project directory:
 
 Then in your project’s gatsby-config.js file add the plugin to the registry, we recommend passing in the necessary Portway token and project id as environment variables, you’ll never want to check your tokens into source control.
 
+Include the gatsby-plugin-sharp and gatsby-transformer-sharp plugins to add options for portway image handling and caching
+
 ```js
 plugins: [
+  gatsby-plugin-sharp,
+  gatsby-transformer-sharp,
   {
     resolve: '@portway/gatsby-source-portway',
     options: {
