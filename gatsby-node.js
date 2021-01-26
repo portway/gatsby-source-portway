@@ -1,4 +1,5 @@
 const fetch = require('node-fetch')
+const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
 
 /**
  * You can uncomment the following line to verify that
@@ -11,6 +12,8 @@ const fetch = require('node-fetch')
 const PROJECT_NODE_TYPE = `PortwayProject`
 const DOCUMENT_NODE_TYPE = `PortwayDocument`
 const FIELD_NODE_TYPE = `PortwayField`
+
+const PORTWAY_IMAGE_TYPE = 4
 
 const fetchFromPortway = async (url, token) => {
   const response = await fetch(url, {
@@ -78,6 +81,40 @@ const fetchDocumentFields = async (documentId, token) => {
   return fields
 }
 
+exports.onCreateNode = async ({
+  actions: { createNode },
+  getCache,
+  createNodeId,
+  node,
+}) => {
+  // make sure we're only running the image file downloader on image fields
+  if (node.internal.type === FIELD_NODE_TYPE && node.type === PORTWAY_IMAGE_TYPE) {
+
+    const fileNode = await createRemoteFileNode({
+      url: node.value,
+      getCache,
+      createNode,
+      createNodeId,
+      parentNodeId: node.id,
+    })
+
+    if (fileNode) {
+      node.remoteImage = fileNode.id
+    }
+  }
+}
+
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+
+  createTypes(`
+    type PortwayField implements Node {
+      id: ID!
+      # create a relationship between YourSourceType and the File nodes for optimized images
+      remoteImage: File @link
+    }`)
+}
+
 exports.sourceNodes = async ({
   actions,
   createContentDigest,
@@ -105,7 +142,6 @@ exports.sourceNodes = async ({
     },
   }
   createNode(nodeData)
-
 
   const projectDocuments = await fetchProjectDocuments(projectId, token)
   // loop through documents and create Gatsby nodes
@@ -155,4 +191,5 @@ exports.sourceNodes = async ({
 
   return
 }
+
 exports.onPreInit = () => console.log('Loaded gatsby-source-portway')
