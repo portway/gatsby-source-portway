@@ -1,3 +1,9 @@
+# A GatsbyJS plugin to source content from Portway
+
+Use [Portway](https://getportway.com) as a content source for your GatsbyJS site.
+
+See the [Guide on building a website using Portway and GatsbyJS](https://docs.portway.app/guides/build-a-simple-website-with-gatsby)
+
 ### Setting up the plugin
 
 In your gatsby project directory:
