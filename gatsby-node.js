@@ -52,6 +52,8 @@ const fetchProject = async (projectId, token) => {
 const fetchProjectDocuments = async (projectId, draft, token) => {
   let documents
   const draftPram = draft === 'true' ? '?draft=true' : ''
+  console.log(`https://api.portway.app/api/v1/projects/${projectId}/documents${draftPram}`)
+
   try {
     const { data } = await fetchFromPortway(
       `https://api.portway.app/api/v1/projects/${projectId}/documents${draftPram}`,
@@ -68,6 +70,7 @@ const fetchProjectDocuments = async (projectId, draft, token) => {
 const fetchDocumentFields = async (documentId, draft, token) => {
   let fields
   const draftPram = draft === 'true' ? '?draft=true' : ''
+  console.log(`https://api.portway.app/api/v1/documents/${documentId}/fields${draftPram}`)
 
   try {
     const { data } = await fetchFromPortway(
