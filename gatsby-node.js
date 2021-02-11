@@ -52,7 +52,6 @@ const fetchProject = async (projectId, token) => {
 const fetchProjectDocuments = async (projectId, draft, token) => {
   let documents
   const draftPram = draft === 'true' ? '?draft=true' : ''
-  console.log(`https://api.portway.app/api/v1/projects/${projectId}/documents${draftPram}`)
 
   try {
     const { data } = await fetchFromPortway(
@@ -70,7 +69,6 @@ const fetchProjectDocuments = async (projectId, draft, token) => {
 const fetchDocumentFields = async (documentId, draft, token) => {
   let fields
   const draftPram = draft === 'true' ? '?draft=true' : ''
-  console.log(`https://api.portway.app/api/v1/documents/${documentId}/fields${draftPram}`)
 
   try {
     const { data } = await fetchFromPortway(
@@ -129,9 +127,7 @@ exports.sourceNodes = async ({
   const { draft, projectId, token } = configOptions
 
   if (draft === 'true') {
-    console.warn('-----------------------------------')
-    console.warn('     Portway is in Draft mode!     ')
-    console.warn('-----------------------------------')
+    console.warn('🚨 Portway is in Draft mode!')
   }
 
   const project = await fetchProject(projectId, token)
@@ -202,4 +198,4 @@ exports.sourceNodes = async ({
   return
 }
 
-exports.onPreInit = () => console.log('Loaded gatsby-source-portway')
+exports.onPreInit = () => console.info('Loaded gatsby-source-portway')
