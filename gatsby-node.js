@@ -21,7 +21,7 @@ const fetchFromPortway = async (url, token) => {
       Authorization: `Bearer ${token}`,
     }
   })
-  
+
   if (response.ok) {
     // response.status >= 200 && response.status < 300
     return response.json()
@@ -40,7 +40,7 @@ const fetchProject = async (projectId, token) => {
     )
     project = data
   } catch(err) {
-    throw new Error(`Unable to fetch project with id ${projectId}. 
+    throw new Error(`Unable to fetch project with id ${projectId}.
     Make sure you have the correct project id and that you have access to this project with the token provided.
     Go here to see your Portway project: https://portway.app/d/project/${projectId}
     `)
@@ -49,12 +49,13 @@ const fetchProject = async (projectId, token) => {
   return project
 }
 
-const fetchProjectDocuments = async (projectId, token) => {
+const fetchProjectDocuments = async (projectId, draft, token) => {
   let documents
+  const draftPram = draft.toLowerCase() === 'true' ? '?draft=true' : ''
 
   try {
     const { data } = await fetchFromPortway(
-      `https://api.portway.app/api/v1/projects/${projectId}/documents`,
+      `https://api.portway.app/api/v1/projects/${projectId}/documents${draftPram}`,
       token
     )
     documents = data
@@ -65,12 +66,13 @@ const fetchProjectDocuments = async (projectId, token) => {
   return documents
 }
 
-const fetchDocumentFields = async (documentId, token) => {
+const fetchDocumentFields = async (documentId, draft, token) => {
   let fields
+  const draftPram = draft.toLowerCase() === 'true' ? '?draft=true' : ''
 
   try {
     const { data } = await fetchFromPortway(
-      `https://api.portway.app/api/v1/documents/${documentId}/fields`,
+      `https://api.portway.app/api/v1/documents/${documentId}/fields${draftPram}`,
       token
     )
     fields = data
@@ -122,7 +124,11 @@ exports.sourceNodes = async ({
   getNodesByType,
 }, configOptions) => {
   const { createNode } = actions
-  const { projectId, token } = configOptions
+  const { draft, projectId, token } = configOptions
+
+  if (draft.toLowerCase() === 'true') {
+    console.warn('🚨 Portway is in Draft mode!')
+  }
 
   const project = await fetchProject(projectId, token)
   // create project node
@@ -143,13 +149,13 @@ exports.sourceNodes = async ({
   }
   createNode(nodeData)
 
-  const projectDocuments = await fetchProjectDocuments(projectId, token)
+  const projectDocuments = await fetchProjectDocuments(projectId, draft, token)
   // loop through documents and create Gatsby nodes
   await Promise.all(
     projectDocuments.map(async (document) => {
       const documentNodeId = createNodeId(`portway-document-${document.id}`)
 
-      const documentFields = await fetchDocumentFields(document.id, token)
+      const documentFields = await fetchDocumentFields(document.id, draft, token)
 
       // create field nodes
       const documentFieldNodeIds = documentFields.map((field) => {
@@ -192,4 +198,4 @@ exports.sourceNodes = async ({
   return
 }
 
-exports.onPreInit = () => console.log('Loaded gatsby-source-portway')
+exports.onPreInit = () => console.info('Loaded gatsby-source-portway')
