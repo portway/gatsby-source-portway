@@ -65,12 +65,13 @@ const fetchProjectDocuments = async (projectId, draft, token) => {
   return documents
 }
 
-const fetchDocumentFields = async (documentId, token) => {
+const fetchDocumentFields = async (documentId, draft, token) => {
   let fields
+  const draftPram = draft === 'true' ? '?draft=true' : ''
 
   try {
     const { data } = await fetchFromPortway(
-      `https://api.portway.app/api/v1/documents/${documentId}/fields`,
+      `https://api.portway.app/api/v1/documents/${documentId}/fields/${draftPram}`,
       token
     )
     fields = data
@@ -125,9 +126,9 @@ exports.sourceNodes = async ({
   const { draft, projectId, token } = configOptions
 
   if (draft === 'true') {
-    console.info('-----------------------------------')
-    console.info('Portway is in Draft mode!')
-    console.info('-----------------------------------')
+    console.warn('-----------------------------------')
+    console.warn('     Portway is in Draft mode!     ')
+    console.warn('-----------------------------------')
   }
 
   const project = await fetchProject(projectId, token)
@@ -155,7 +156,7 @@ exports.sourceNodes = async ({
     projectDocuments.map(async (document) => {
       const documentNodeId = createNodeId(`portway-document-${document.id}`)
 
-      const documentFields = await fetchDocumentFields(document.id, token)
+      const documentFields = await fetchDocumentFields(document.id, draft, token)
 
       // create field nodes
       const documentFieldNodeIds = documentFields.map((field) => {
