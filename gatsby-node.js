@@ -51,7 +51,7 @@ const fetchProject = async (projectId, token) => {
 
 const fetchProjectDocuments = async (projectId, draft, token) => {
   let documents
-  const draftPram = draft ? '?draft=true' : ''
+  const draftPram = draft === 'true' ? '?draft=true' : ''
   try {
     const { data } = await fetchFromPortway(
       `https://api.portway.app/api/v1/projects/${projectId}/documents/${draftPram}`,
@@ -123,6 +123,12 @@ exports.sourceNodes = async ({
 }, configOptions) => {
   const { createNode } = actions
   const { draft, projectId, token } = configOptions
+
+  if (draft === 'true') {
+    console.info('-----------------------------------')
+    console.info('Portway is in Draft mode!')
+    console.info('-----------------------------------')
+  }
 
   const project = await fetchProject(projectId, token)
   // create project node
