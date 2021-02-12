@@ -1,6 +1,6 @@
 {
   "name": "@portway/gatsby-source-portway",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A portway data fetching plugin for gatsby",
   "main": "index.js",
   "scripts": {

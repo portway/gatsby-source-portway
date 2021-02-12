@@ -51,7 +51,7 @@ const fetchProject = async (projectId, token) => {
 
 const fetchProjectDocuments = async (projectId, draft, token) => {
   let documents
-  const draftPram = draft.toLowerCase() === 'true' ? '?draft=true' : ''
+  const draftPram = draft && draft.toLowerCase() === 'true' ? '?draft=true' : ''
 
   try {
     const { data } = await fetchFromPortway(
@@ -68,7 +68,7 @@ const fetchProjectDocuments = async (projectId, draft, token) => {
 
 const fetchDocumentFields = async (documentId, draft, token) => {
   let fields
-  const draftPram = draft.toLowerCase() === 'true' ? '?draft=true' : ''
+  const draftPram = draft && draft.toLowerCase() === 'true' ? '?draft=true' : ''
 
   try {
     const { data } = await fetchFromPortway(
@@ -126,7 +126,7 @@ exports.sourceNodes = async ({
   const { createNode } = actions
   const { draft, projectId, token } = configOptions
 
-  if (draft.toLowerCase() === 'true') {
+  if (draft && draft.toLowerCase() === 'true') {
     console.warn('🚨 Portway is in Draft mode!')
   }
 
