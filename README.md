@@ -36,7 +36,7 @@ plugins: [
 | projectId | * | The project ID from your URL https://portway.app/d/projects/#ID# |   |
 | token | * | The token, or key from your project’s API Keys section |   |
 
-Here are some Gatsby [tips on using environment variables](https://www.gatsbyjs.org/docs/environment-variables/https://www.gatsbyjs.org/docs/environment-variables/).
+Here are some Gatsby [tips on using environment variables](https://www.gatsbyjs.org/docs/environment-variables/).
 
 ## Example query for fetching project data:
 
